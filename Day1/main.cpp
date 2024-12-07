@@ -1,5 +1,3 @@
-#include <cstddef>
-#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -72,6 +70,7 @@ int distance(int left, int right) {
     }
 
     return distance;
+    #include <cstdio>
 }
 
 int total_distance(std::vector<int>& left_list, std::vector<int>& right_list) {
