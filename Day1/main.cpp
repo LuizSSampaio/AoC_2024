@@ -1,13 +1,15 @@
+#include <cstddef>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 std::string get_input();
 void divide_input(std::string input, std::vector<int>& left_list, std::vector<int>& right_list);
-int distance(int left, int right);
-int total_distance(std::vector<int>& left_list, std::vector<int>& right_list);
+int total_distance(const std::vector<int>& left_list, const std::vector<int>& right_list);
+int total_similarity(const std::vector<int>& left_list, const std::vector<int>& right_list);
 
 int main() {
     std::vector<int> left_list, right_list;
@@ -16,7 +18,8 @@ int main() {
     std::sort(left_list.begin(), left_list.end());
     std::sort(right_list.begin(), right_list.end());
 
-    std::cout << "Response: " << total_distance(left_list, right_list) << std::endl;
+    std::cout << "Response part 1: " << total_distance(left_list, right_list) << std::endl;
+    std::cout << "Response part 2: " << total_similarity(left_list, right_list) << std::endl;
     return 0;
 }
 
@@ -63,20 +66,37 @@ void divide_input(std::string input, std::vector<int>& left_list, std::vector<in
     }
 }
 
-int distance(int left, int right) {
-    int distance = left - right;
-    if (distance < 0) {
-        distance *= -1;
-    }
-
-    return distance;
-    #include <cstdio>
-}
-
-int total_distance(std::vector<int>& left_list, std::vector<int>& right_list) {
+int total_distance(const std::vector<int>& left_list, const std::vector<int>& right_list) {
     int total_distance = 0;
     for (int i = 0; i < left_list.size(); i++) {
-        total_distance += distance(left_list[i], right_list[i]);
+        total_distance += std::abs(left_list[i] - right_list[i]);
     }
     return total_distance;
+}
+
+int total_similarity(const std::vector<int>& left_list, const std::vector<int>& right_list) {
+    int total_similarity = 0;
+
+    size_t pos = 0;
+    int last_element = -1;
+    int appear_times = 0;
+    for (int left_element : left_list) {
+        if (left_element != last_element) {
+            last_element = left_element;
+            appear_times = 0;
+
+            if (left_element < right_list[pos])
+                continue;
+
+            while (left_element >= right_list[pos]) {
+                if (left_element == right_list[pos]) {
+                    appear_times += 1;
+                }
+                pos += 1;
+            }
+        }
+        total_similarity += left_element * appear_times;
+    }
+
+    return total_similarity;
 }
